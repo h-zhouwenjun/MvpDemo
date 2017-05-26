@@ -9,19 +9,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 /**
  * <b>创建时间</b> 17/5/25 <br>
  *
  * @author zhouwenjun
  */
 
-public abstract class BaseFragment extends Fragment{
+public abstract class BaseFragment<P extends BasePresenter> extends Fragment{
     /**
      * 图片加载
      */
     protected BaseActivity mContext;
     protected View mRootView;
     protected Intent mBundleIntent;
+    @Inject
+    protected P mPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

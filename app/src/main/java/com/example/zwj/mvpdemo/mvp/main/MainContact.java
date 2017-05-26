@@ -1,4 +1,4 @@
-package com.example.zwj.mvpdemo.mvp;
+package com.example.zwj.mvpdemo.mvp.main;
 
 /**
  * <b>创建时间</b> 17/5/26 <br>
@@ -6,5 +6,5 @@ package com.example.zwj.mvpdemo.mvp;
  * @author zhouwenjun
  */
 
-public class test {
+public class MainContact {
 }

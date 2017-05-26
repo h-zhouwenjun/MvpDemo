@@ -1,5 +1,6 @@
 package com.example.zwj.mvpdemo.base;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -11,17 +12,24 @@ import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.zwj.mvpdemo.app.DemoApplication;
+import com.example.zwj.mvpdemo.di.component.AppComponent;
+
+import javax.inject.Inject;
+
 /**
  * <b>创建时间</b> 17/5/25 <br>
  *
  * @author zhouwenjun
  */
 
-public abstract class BaseActivity extends FragmentActivity{
+public abstract class BaseActivity<P extends BasePresenter> extends FragmentActivity{
+
     protected Context mContext;
     protected Handler mHandler = new Handler();
-
-    private ActionBar mActionBar;
+    @Inject
+    protected P mPresenter;
+    protected DemoApplication demoApplication;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,15 +41,17 @@ public abstract class BaseActivity extends FragmentActivity{
         if (getLayoutId() != 0){
             setContentView(getLayoutId());
         }
-
+        demoApplication = (DemoApplication) getApplication();
+        ComponentInject(demoApplication.getAppComponent());//依赖注入
         initView();
         initData();
-        setActionBar();
         setListener();
     }
 
-
-    protected abstract void setActionBar();
+    /**
+     * 依赖注入的入口
+     */
+    protected abstract void ComponentInject(AppComponent appComponent);
 
     /**
      * 设置监听
@@ -74,43 +84,6 @@ public abstract class BaseActivity extends FragmentActivity{
         super.onResume();
     }
 
-    /**
-     * 获取资源id
-     * @param resId
-     * @param <T>
-     * @return
-     */
-    public <T extends View> T obtainView(int resId){
-        return (T)findViewById(resId);
-    }
-
-    /**
-     * 显示toast
-     * @param resId
-     */
-    public void showToast(final int resId){
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(BaseActivity.this,getString(resId),Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /**
-     * 显示toast
-     * @param msg
-     */
-    public void showToast(final String msg){
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(BaseActivity.this,msg,Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -124,6 +97,43 @@ public abstract class BaseActivity extends FragmentActivity{
     protected void invoke(Context context,Class clz){
         startActivity(new Intent(context,clz));
     }
+
+    /**
+     * 以无参数的模式启动Activity。
+     *
+     * @param activityClass
+     */
+    public void startActivity(Class<? extends Activity> activityClass) {
+        startActivity(getLocalIntent(activityClass, null));
+        //   me.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
+
+    /**
+     * 以绑定参数的模式启动Activity。
+     *
+     * @param activityClass
+     */
+    public void startActivity(Class<? extends Activity> activityClass,
+                              Bundle bd) {
+        startActivity(getLocalIntent(activityClass, bd));
+        //    me.overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+    }
+
+    /**
+     * 获取当前程序中的本地目标
+     *
+     * @param localIntent
+     * @return
+     */
+    public Intent getLocalIntent(Class<? extends Context> localIntent,
+                                 Bundle bd) {
+        Intent intent = new Intent(this, localIntent);
+        if (null != bd) {
+            intent.putExtras(bd);
+        }
+        return intent;
+    }
+
 
 }
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/wangyuanxing/.gradle/caches/modules-2/files-2.1/javax.annotation/jsr250-api/1.0/5025422767732a1ab45d93abfea846513d742dcf/jsr250-api-1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="5025422767732a1ab45d93abfea846513d742dcf">
+        <dex dex="/Users/wangyuanxing/Desktop/MvpMaster/app/build/intermediates/pre-dexed/debug/jsr250-api-1.0_d1d3b5a22f0aab3c35793de56a85227525492973.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/wangyuanxing/.android/build-cache/fbd7b72c111f89390fc4ba49a9fb90f967ed6784/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="1f0fc9db38baa048e9e58901e75f76569b013d1c">
+        <dex dex="/Users/wangyuanxing/Desktop/MvpMaster/app/build/intermediates/pre-dexed/debug/classes_6bc1bf012a36510068a8c235557469ac91d87522.jar" />
+    </item>
+
+</items>

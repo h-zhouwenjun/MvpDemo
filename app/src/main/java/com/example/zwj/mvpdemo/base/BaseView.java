@@ -1,13 +1,12 @@
-package com.example.zwj.mvpdemo.mvp.view.Iview;
+package com.example.zwj.mvpdemo.base;
 
 import android.content.Context;
 
 /**
- * <b>创建时间</b> 17/5/25 <br>
+ * <b>创建时间</b> 17/5/26 <br>
  *
  * @author zhouwenjun
  */
-
 public interface BaseView {
 
     /**
@@ -26,12 +25,10 @@ public interface BaseView {
     void showMsg(String msg);
 
     void showMsg(int msgId);
-
     /**
      * 获取Context
      *
      * @return
      */
     Context getContext();
-
 }
