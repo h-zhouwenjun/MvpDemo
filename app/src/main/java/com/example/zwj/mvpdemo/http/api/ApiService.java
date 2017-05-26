@@ -1,7 +1,6 @@
 package com.example.zwj.mvpdemo.http.api;
 
 
-
 import com.example.zwj.mvpdemo.bean.TestBean;
 
 import io.reactivex.Observable;
@@ -9,6 +8,11 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
+/**
+ * <b>创建时间</b> 17/5/26 <br>
+ *
+ * @author zhouwenjun
+ */
 
 public interface ApiService {
 

@@ -1,4 +1,9 @@
 package com.example.zwj.mvpdemo.http.exception;
+/**
+ * <b>创建时间</b> 17/5/26 <br>
+ *
+ * @author zhouwenjun
+ */
 
 public class ApiException extends RuntimeException {
     public static final int Code_TimeOut = 1000;

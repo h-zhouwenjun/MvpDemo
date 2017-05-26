@@ -10,6 +10,11 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.rx_cache2.EvictProvider;
 import io.rx_cache2.LifeCache;
+/**
+ * <b>创建时间</b> 17/5/26 <br>
+ *
+ * @author zhouwenjun
+ */
 
 public interface CacheProvider {
 

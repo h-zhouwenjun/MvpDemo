@@ -12,6 +12,11 @@ import java.lang.reflect.Type;
 
 import io.victoralbertos.jolyglot.JolyglotGenerics;
 import io.victoralbertos.jolyglot.Types;
+/**
+ * <b>创建时间</b> 17/5/26 <br>
+ *
+ * @author zhouwenjun
+ */
 
 public class GsonTSpeaker implements JolyglotGenerics {
 

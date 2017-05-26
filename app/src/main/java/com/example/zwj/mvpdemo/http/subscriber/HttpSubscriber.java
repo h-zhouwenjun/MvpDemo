@@ -13,6 +13,11 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.CompositeException;
 import io.rx_cache2.RxCacheException;
 
+/**
+ * <b>创建时间</b> 17/5/26 <br>
+ *
+ * @author zhouwenjun
+ */
 
 public class HttpSubscriber<T> implements Observer<T> {
     private OnResultCallBack mOnResultListener;
