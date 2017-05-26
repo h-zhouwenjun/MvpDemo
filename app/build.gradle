@@ -40,4 +40,6 @@ dependencies {
     compile 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
     //Okhttp-interceptor
     compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    //BaseRecyclerViewAdapterHelper
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.17'
 }

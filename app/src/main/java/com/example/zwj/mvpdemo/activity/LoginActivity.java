@@ -1,4 +1,4 @@
-package com.example.zwj.mvpdemo;
+package com.example.zwj.mvpdemo.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,6 +29,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.zwj.mvpdemo.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * 2017
- * 
+ *
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
