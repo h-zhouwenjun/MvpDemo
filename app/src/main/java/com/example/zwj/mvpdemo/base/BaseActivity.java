@@ -94,6 +94,16 @@ public abstract class BaseActivity<P extends BasePresenter> extends FragmentActi
         super.onDestroy();
     }
 
+    /**
+     * 获取资源id
+     * @param resId
+     * @param <T>
+     * @return
+     */
+    public <T extends View> T obtainView(int resId){
+        return (T)findViewById(resId);
+    }
+
     protected void invoke(Context context,Class clz){
         startActivity(new Intent(context,clz));
     }

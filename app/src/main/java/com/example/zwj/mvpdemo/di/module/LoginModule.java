@@ -1,7 +1,7 @@
 package com.example.zwj.mvpdemo.di.module;
 
 import com.example.zwj.mvpdemo.di.scop.ActivityScope;
-import com.example.zwj.mvpdemo.mvp.login.LoginCantact;
+import com.example.zwj.mvpdemo.mvp.login.LoginContact;
 
 import dagger.Module;
 import dagger.Provides;
@@ -14,15 +14,15 @@ import dagger.Provides;
 @Module
 public class LoginModule {
 
-    private LoginCantact.View view;
+    private LoginContact.View view;
 
-    public LoginModule(LoginCantact.View view) {
+    public LoginModule(LoginContact.View view) {
         this.view = view;
     }
 
     @ActivityScope
     @Provides
-    LoginCantact.View provideTempLateView() {
+    LoginContact.View provideTempLateView() {
         return this.view;
     }
 }

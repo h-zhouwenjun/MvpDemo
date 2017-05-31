@@ -10,12 +10,12 @@ import javax.inject.Inject;
  * @author zhouwenjun
  */
 
-public class LoginPresenter extends BasePresenter<LoginCantact.View>{
+public class LoginPresenter extends BasePresenter<LoginContact.View> {
+
     @Inject
-    public LoginPresenter(LoginCantact.View rootView) {
+    public LoginPresenter(LoginContact.View rootView) {
         super(rootView);
     }
-
 
     public void getTime() {
         mRootView.setTime(System.currentTimeMillis() + "");

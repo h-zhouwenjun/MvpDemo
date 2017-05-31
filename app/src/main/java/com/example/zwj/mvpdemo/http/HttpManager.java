@@ -3,10 +3,9 @@ package com.example.zwj.mvpdemo.http;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.zwj.mvpdemo.bean.TestBean;
 import com.example.zwj.mvpdemo.common.Constant;
 import com.example.zwj.mvpdemo.http.api.ApiResponse;
-import com.example.zwj.mvpdemo.http.api.ApiService;
+import com.example.zwj.mvpdemo.http.api.service.GankApiService;
 import com.example.zwj.mvpdemo.http.cache.CacheProvider;
 import com.example.zwj.mvpdemo.http.exception.ApiException;
 import com.example.zwj.mvpdemo.http.parser.GsonTSpeaker;
@@ -20,7 +19,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import io.rx_cache2.EvictProvider;
 import io.rx_cache2.internal.RxCache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -37,10 +35,10 @@ public class HttpManager {
     public static final String TAG = HttpManager.class.getSimpleName();
     private static final int DEFAULT_TIMEOUT = 5;
     private Retrofit mRetrofit;
-    private ApiService mApiService;
+    private GankApiService mGankApiService;
     private final CacheProvider cacheProvider;
-    private static Context mContext;
     private volatile static HttpManager instance;
+    private static Context mContext;
 
     private HttpManager() {
         HttpLoggingInterceptor.Level level = HttpLoggingInterceptor.Level.BODY;
@@ -62,15 +60,14 @@ public class HttpManager {
         mRetrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl(Constant.BASE_URL)
+                .baseUrl(Constant.GANK_HOME)
                 .client(okHttpClient)
                 .build();
 
         cacheProvider = new RxCache.Builder()
                 .persistence(mContext.getFilesDir(), new GsonTSpeaker())
                 .using(CacheProvider.class);
-
-        mApiService = mRetrofit.create(ApiService.class);
+        mGankApiService = mRetrofit.create(GankApiService.class);
     }
 
     public static HttpManager getInstance() {
@@ -88,17 +85,17 @@ public class HttpManager {
         mContext = context;
     }
 
-    private <T> void toSubscribe(Observable<ApiResponse<T>> o, Observer<T> s) {
+    public <T> void toSubscribe(Observable<ApiResponse<T>> o, Observer<T> s) {
         o.subscribeOn(Schedulers.io())
                 .map(new Function<ApiResponse<T>, T>() {
                     @Override
                     public T apply(@NonNull ApiResponse<T> response) throws Exception {
-                        int code = Integer.parseInt(response.getCode());
-                        if (code != Constant.SUCCESS_CODE) {
-                            throw new ApiException(code, response.getMsg());
-                        } else {
-                            return response.getDatas();
-                        }
+//                        int code = Integer.parseInt(response.code);
+//                        if (code != Constant.SUCCESS_CODE) {
+//                            throw new ApiException(code, response.message);
+//                        } else {
+                        return response.results;
+//                        }
                     }
                 })
                 .unsubscribeOn(Schedulers.io())
@@ -106,12 +103,16 @@ public class HttpManager {
                 .subscribe(s);
     }
 
-    public void getDatasWithCache(Observer<TestBean> subscriber, int pno, int ps, String dtype, boolean update) {
-        toSubscribe(cacheProvider.getDatas(mApiService.getDatas(pno, ps, dtype), new EvictProvider(update)), subscriber);
+    public GankApiService getGankApiService() {
+        return mGankApiService;
     }
 
-    public void getDatasNoCache(Observer<TestBean> subscriber, int pno, int ps, String dtype) {
-        toSubscribe(mApiService.getDatas(pno, ps, dtype), subscriber);
-    }
+//    public void getDatasWithCache(Observer<TestBean> subscriber, int pno, int ps, String dtype, boolean update) {
+//        toSubscribe(cacheProvider.getDatas(mApiService.getDatas(pno, ps, dtype), new EvictProvider(update)), subscriber);
+//    }
+//
+//    public void getDatasNoCache(Observer<TestBean> subscriber, int pno, int ps, String dtype) {
+//        toSubscribe(mApiService.getDatas(pno, ps, dtype), subscriber);
+//    }
 
 }

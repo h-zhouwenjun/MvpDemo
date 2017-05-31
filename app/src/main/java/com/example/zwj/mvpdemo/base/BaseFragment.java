@@ -9,6 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.zwj.mvpdemo.app.DemoApplication;
+import com.example.zwj.mvpdemo.di.component.AppComponent;
+
 import javax.inject.Inject;
 
 /**
@@ -26,6 +29,7 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment{
     protected Intent mBundleIntent;
     @Inject
     protected P mPresenter;
+    protected DemoApplication demoApplication;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +50,8 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment{
         if (getLayoutId() != 0){
             mRootView = inflater.inflate(getLayoutId(),container,false);
         }
+        demoApplication = (DemoApplication) mContext.getApplication();
+        ComponentInject(demoApplication.getAppComponent());//依赖注入
         initView(mRootView);
         setUserVisibleHint(true);
         setListener();
@@ -118,6 +124,11 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment{
      * @return
      */
     protected abstract int getLayoutId();
+
+    /**
+     * 依赖注入的入口
+     */
+    protected abstract void ComponentInject(AppComponent appComponent);
 
 }
 
