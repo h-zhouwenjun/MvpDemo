@@ -1,4 +1,4 @@
-package com.example.zwj.mvpdemo.mvp.friend;
+package com.example.zwj.mvpdemo.mvp.live;
 
 import com.example.zwj.mvpdemo.base.BaseView;
 

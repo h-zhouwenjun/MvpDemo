@@ -17,6 +17,8 @@ import com.example.zwj.mvpdemo.di.component.AppComponent;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
+
 /**
  * <b>创建时间</b> 17/5/25 <br>
  *
@@ -41,6 +43,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends FragmentActi
         if (getLayoutId() != 0){
             setContentView(getLayoutId());
         }
+        ButterKnife.bind(this);
         demoApplication = (DemoApplication) getApplication();
         ComponentInject(demoApplication.getAppComponent());//依赖注入
         initView();

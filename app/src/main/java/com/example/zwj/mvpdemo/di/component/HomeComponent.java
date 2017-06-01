@@ -2,7 +2,7 @@ package com.example.zwj.mvpdemo.di.component;
 
 import com.example.zwj.mvpdemo.di.module.HomeModule;
 import com.example.zwj.mvpdemo.di.scop.ActivityScope;
-import com.example.zwj.mvpdemo.mvp.friend.HomeFragment;
+import com.example.zwj.mvpdemo.mvp.live.HomeFragment;
 
 import dagger.Component;
 

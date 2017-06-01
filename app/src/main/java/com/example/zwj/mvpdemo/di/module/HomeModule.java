@@ -1,8 +1,7 @@
 package com.example.zwj.mvpdemo.di.module;
 
 import com.example.zwj.mvpdemo.di.scop.ActivityScope;
-import com.example.zwj.mvpdemo.mvp.friend.HomeContact;
-import com.example.zwj.mvpdemo.mvp.main.MainContact;
+import com.example.zwj.mvpdemo.mvp.live.HomeContact;
 
 import dagger.Module;
 import dagger.Provides;

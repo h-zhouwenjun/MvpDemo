@@ -1,17 +1,18 @@
-package com.example.zwj.mvpdemo.mvp.friend;
+package com.example.zwj.mvpdemo.mvp.live;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.zwj.mvpdemo.R;
-import com.example.zwj.mvpdemo.base.LazyLoadFragment;
+import com.example.zwj.mvpdemo.base.BaseFragment;
 import com.example.zwj.mvpdemo.di.component.AppComponent;
 import com.example.zwj.mvpdemo.di.component.DaggerHomeComponent;
 import com.example.zwj.mvpdemo.di.module.HomeModule;
 import com.example.zwj.mvpdemo.utils.FCLogger;
 
 
-public class HomeFragment extends LazyLoadFragment<HomePresenter> implements HomeContact.View {
+public class HomeFragment extends BaseFragment<HomePresenter> implements HomeContact.View {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -55,6 +56,12 @@ public class HomeFragment extends LazyLoadFragment<HomePresenter> implements Hom
     }
 
     @Override
+    protected void initView(View rootView) {
+        FCLogger.debug("HomeFragment---initView");
+        mPresenter.initSlidingTab(rootView, mContext);
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_home;
     }
@@ -64,7 +71,7 @@ public class HomeFragment extends LazyLoadFragment<HomePresenter> implements Hom
         DaggerHomeComponent
                 .builder()
                 .appComponent(appComponent)
-                .homeModule(new HomeModule(this)) //请将MainModule()第一个首字母改为小写
+                .homeModule(new HomeModule(this))
                 .build()
                 .inject(this);
     }
@@ -80,8 +87,8 @@ public class HomeFragment extends LazyLoadFragment<HomePresenter> implements Hom
     }
 
     @Override
-    public void lazyLoad() {
-        FCLogger.debug("lazyLoad");
+    protected void onFirstUserVisible() {
+        FCLogger.debug("onFirstUserVisible");
         mPresenter.getMeiZhiData(mContext, "福利", 20, 1);
     }
 

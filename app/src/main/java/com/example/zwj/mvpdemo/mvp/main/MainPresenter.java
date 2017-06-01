@@ -9,7 +9,10 @@ import com.example.zwj.mvpdemo.R;
 import com.example.zwj.mvpdemo.base.BaseActivity;
 import com.example.zwj.mvpdemo.base.BasePresenter;
 import com.example.zwj.mvpdemo.bean.TabBean;
-import com.example.zwj.mvpdemo.mvp.friend.HomeFragment;
+import com.example.zwj.mvpdemo.mvp.dynamic.DynamicFragment;
+import com.example.zwj.mvpdemo.mvp.live.HomeFragment;
+import com.example.zwj.mvpdemo.mvp.message.MessageFragment;
+import com.example.zwj.mvpdemo.mvp.mine.MineFragment;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
@@ -29,12 +32,12 @@ public class MainPresenter extends BasePresenter<MainContact.View> {
     private CommonTabLayout mTlMain;
     private ViewPager mVpMain;
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private String[] mTitles = {"首页", "消息", "联系人"};
+    private String[] mTitles = {"首页", "动态", "消息", "我的"};
     private ArrayList<Fragment> mFragments = new ArrayList<>();
     private int[] mIconSelectIds = {
-            R.drawable.tab_home_select, R.drawable.tab_speech_select, R.drawable.tab_contact_select};
+            R.drawable.tab_home_select, R.drawable.tab_more_select, R.drawable.tab_speech_select, R.drawable.tab_contact_select};
     private int[] mIconUnselectIds = {
-            R.drawable.tab_home_unselect, R.drawable.tab_speech_unselect, R.drawable.tab_contact_unselect};
+            R.drawable.tab_home_unselect, R.drawable.tab_more_unselect, R.drawable.tab_speech_unselect, R.drawable.tab_contact_unselect};
 
     @Inject
     public MainPresenter(MainContact.View rootView) {
@@ -47,15 +50,16 @@ public class MainPresenter extends BasePresenter<MainContact.View> {
      * @param context
      */
     public void initTabLayout(BaseActivity context) {
-        for (String title : mTitles) {
-            mFragments.add(HomeFragment.newInstance(title, ""));
-        }
-
+        mFragments.add(HomeFragment.newInstance("", ""));
+        mFragments.add(DynamicFragment.newInstance("",""));
+        mFragments.add(MessageFragment.newInstance("",""));
+        mFragments.add(MineFragment.newInstance("",""));
         for (int i = 0; i < mTitles.length; i++) {
             mTabEntities.add(new TabBean(mTitles[i], mIconSelectIds[i], mIconUnselectIds[i]));
         }
         mTlMain = (CommonTabLayout) context.obtainView(R.id.tl_main);
         mVpMain = (ViewPager) context.obtainView(R.id.vp_main_container);
+        mVpMain.setOffscreenPageLimit(4);
         mTlMain.setTabData(mTabEntities);
         mVpMain.setAdapter(new MyPagerAdapter(context.getSupportFragmentManager()));
         mTlMain.setOnTabSelectListener(new OnTabSelectListener() {
@@ -88,7 +92,7 @@ public class MainPresenter extends BasePresenter<MainContact.View> {
         mTlMain.setCurrentTab(0);
         mVpMain.setCurrentItem(0);
         //三位数
-        mTlMain.showMsg(1, 100);
+        mTlMain.showMsg(2, 100);
         mTlMain.setMsgMargin(1, -5, 5);
     }
 
