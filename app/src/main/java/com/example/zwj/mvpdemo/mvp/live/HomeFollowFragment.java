@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.zwj.mvpdemo.R;
@@ -189,6 +190,7 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
         if (swipeLayoutFollow != null){
             swipeLayoutFollow.setRefreshing(false);
         }
+        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -196,5 +198,6 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
         if (homeFollowAdapter != null){
             homeFollowAdapter.loadMoreFail();
         }
+        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
     }
 }

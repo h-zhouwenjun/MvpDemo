@@ -67,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HomeSmallVideoFragment.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="HomeSmallVideoFragment.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeSmallVideoFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="187" column="36" selection-start-line="187" selection-start-column="36" selection-end-line="187" selection-end-column="36" />
+            <state relative-caret-position="349">
+              <caret line="192" column="9" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -79,15 +79,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="HomeFollowFragment.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="HomeFollowFragment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeFollowFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2057">
-              <caret line="196" column="45" selection-start-line="196" selection-start-column="45" selection-end-line="196" selection-end-column="45" />
+            <state relative-caret-position="366">
+              <caret line="188" column="35" selection-start-line="188" selection-start-column="35" selection-end-line="188" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3230#3231#0" expanded="true" />
-                <element signature="e#3282#3283#0" expanded="true" />
+                <element signature="e#3259#3260#0" expanded="true" />
+                <element signature="e#3311#3312#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -2076,8 +2076,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeFollowPresenter.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/layout_rv_follow_item.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/adapter/HomeFollowAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeSmallVideoFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeFollowFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeSmallVideoFragment.java" />
       </list>
     </option>
   </component>
@@ -2783,7 +2783,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1920" height="982" extended-state="1" />
+    <frame x="0" y="23" width="1920" height="982" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -3283,24 +3283,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeSmallVideoFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeFollowFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="187" column="36" selection-start-line="187" selection-start-column="36" selection-end-line="187" selection-end-column="36" />
+        <state relative-caret-position="366">
+          <caret line="188" column="35" selection-start-line="188" selection-start-column="35" selection-end-line="188" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#3259#3260#0" expanded="true" />
+            <element signature="e#3311#3312#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeFollowFragment.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/zwj/mvpdemo/mvp/live/HomeSmallVideoFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2057">
-          <caret line="196" column="45" selection-start-line="196" selection-start-column="45" selection-end-line="196" selection-end-column="45" />
+        <state relative-caret-position="349">
+          <caret line="192" column="9" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3230#3231#0" expanded="true" />
-            <element signature="e#3282#3283#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.zwj.mvpdemo.R;
@@ -182,6 +183,7 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
         if (swipeLayoutSmallVideo != null){
             swipeLayoutSmallVideo.setRefreshing(false);
         }
+        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -189,6 +191,7 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
         if (homeSmallVideoAdapter != null){
             homeSmallVideoAdapter.loadMoreFail();
         }
+        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
     }
 
     @Override
