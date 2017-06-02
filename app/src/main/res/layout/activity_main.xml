@@ -10,7 +10,14 @@
         android:id="@+id/vp_main_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tl_main" />
+        android:layout_above="@+id/divider_bottom_bar" />
+
+    <View
+        android:id="@+id/divider_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/tl_main"
+        android:background="@color/colorCommonBg" />
 
     <com.flyco.tablayout.CommonTabLayout
         android:id="@+id/tl_main"

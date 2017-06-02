@@ -1,5 +1,7 @@
 package com.example.zwj.mvpdemo.http.subscriber;
 
+import android.text.TextUtils;
+
 import com.example.zwj.mvpdemo.http.callback.OnResultCallBack;
 import com.example.zwj.mvpdemo.http.exception.ApiException;
 import com.google.gson.stream.MalformedJsonException;
@@ -42,22 +44,25 @@ public class HttpSubscriber<T> implements Observer<T> {
     @Override
     public void onError(Throwable e) {
         if (e instanceof CompositeException) {
-            CompositeException compositeE=(CompositeException)e;
+            CompositeException compositeE = (CompositeException) e;
             for (Throwable throwable : compositeE.getExceptions()) {
                 if (throwable instanceof SocketTimeoutException) {
-                    mOnResultListener.onError(ApiException.Code_TimeOut,ApiException.SOCKET_TIMEOUT_EXCEPTION);
+                    mOnResultListener.onError(ApiException.Code_TimeOut, ApiException.SOCKET_TIMEOUT_EXCEPTION);
                 } else if (throwable instanceof ConnectException) {
-                    mOnResultListener.onError(ApiException.Code_UnConnected,ApiException.CONNECT_EXCEPTION);
+                    mOnResultListener.onError(ApiException.Code_UnConnected, ApiException.CONNECT_EXCEPTION);
                 } else if (throwable instanceof UnknownHostException) {
-                    mOnResultListener.onError(ApiException.Code_UnConnected,ApiException.CONNECT_EXCEPTION);
+                    mOnResultListener.onError(ApiException.Code_UnConnected, ApiException.CONNECT_EXCEPTION);
                 } else if (throwable instanceof RxCacheException) {
                     //缓存异常暂时不做处理
-                }  else if (throwable instanceof MalformedJsonException) {
-                    mOnResultListener.onError(ApiException.Code_MalformedJson,ApiException.MALFORMED_JSON_EXCEPTION);
+                } else if (throwable instanceof MalformedJsonException) {
+                    mOnResultListener.onError(ApiException.Code_MalformedJson, ApiException.MALFORMED_JSON_EXCEPTION);
                 }
             }
-        }else {
+        } else {
             String msg = e.getMessage();
+            if (TextUtils.isEmpty(msg)) {
+                msg = "";
+            }
             int code;
             if (msg.contains("#")) {
                 code = Integer.parseInt(msg.split("#")[0]);

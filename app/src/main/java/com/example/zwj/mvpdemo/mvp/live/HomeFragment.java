@@ -88,8 +88,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
 
     @Override
     protected void onFirstUserVisible() {
-        FCLogger.debug("onFirstUserVisible");
-        mPresenter.getMeiZhiData(mContext, "福利", 20, 1);
+
     }
 
     @Override
