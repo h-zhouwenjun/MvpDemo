@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <application
         android:name=".app.DemoApplication"
@@ -15,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.NoTitleBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".mvp.main.MainActivity"
             android:label="@string/app_name">
@@ -26,7 +29,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".mvp.login.LoginActivity" />
-        <activity android:name=".activity.PhotoViewActivity"></activity>
+        <activity android:name=".activity.PhotoViewActivity" />
+        <activity android:name=".mvp.splash.SplashActivity" />
+
+        <service android:name=".service.GankDataService" />
+
     </application>
 
 </manifest>

@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 
 import com.example.zwj.mvpdemo.app.DemoApplication;
 import com.example.zwj.mvpdemo.di.component.AppComponent;
+import com.example.zwj.mvpdemo.utils.FCLogger;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -57,15 +60,23 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
             mRootView = inflater.inflate(getLayoutId(), container, false);
             ButterKnife.bind(this, mRootView);
         }
+        if (userEventBus()) {
+            EventBus.getDefault().register(this);
+        }
         demoApplication = (DemoApplication) mContext.getApplication();
         ComponentInject(demoApplication.getAppComponent());//依赖注入
+        initData();
         initView(mRootView);
         setUserVisibleHint(true);
         setListener();
-        initData();
 
         return mRootView;
 
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -116,19 +127,18 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
 
     public synchronized void initPrepare() {
         if (mIsPrepared) {
-            onFirstUserVisible();
+            lazyFetchData();
         } else {
             mIsPrepared = true;
         }
     }
 
     /**
-     * 第一次对用户可见时会调用该方法
+     * 懒加载的方式获取数据，仅在满足fragment可见和视图已经准备好的时候调用一次
      */
-    protected void onFirstUserVisible() {
-    }
+    protected void lazyFetchData() {
 
-    ;
+    }
 
     /**
      * 对用户可见时会调用该方法，除了第一次
@@ -147,7 +157,6 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
      */
     public void onUserInvisible() {
     }
-
 
     @Override
     public void onPause() {
@@ -180,7 +189,15 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
 
     @Override
     public void onDestroyView() {
+        if (userEventBus()) {
+            EventBus.getDefault().unregister(this);
+        }
         super.onDestroyView();
+        // view被销毁后，将可以重新触发数据懒加载，因为在viewpager下，fragment不会再次新建并走onCreate的生命周期流程，将从onCreateView开始
+        mPresenter = null;
+        if (null != mRootView) {
+            ((ViewGroup) mRootView.getParent()).removeView(mRootView);
+        }
     }
 
     /**
@@ -217,6 +234,10 @@ public abstract class BaseFragment<P extends BasePresenter> extends Fragment {
      * 依赖注入的入口
      */
     protected abstract void ComponentInject(AppComponent appComponent);
+
+    public boolean userEventBus() {
+        return false;
+    }
 
 }
 

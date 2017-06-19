@@ -4,9 +4,9 @@ import com.bumptech.glide.Glide;
 import com.example.zwj.mvpdemo.R;
 import com.example.zwj.mvpdemo.base.BaseActivity;
 import com.example.zwj.mvpdemo.di.component.AppComponent;
-import com.github.chrisbanes.photoview.PhotoView;
 
 import butterknife.BindView;
+import uk.co.senab.photoview.PhotoView;
 
 public class PhotoViewActivity extends BaseActivity {
 

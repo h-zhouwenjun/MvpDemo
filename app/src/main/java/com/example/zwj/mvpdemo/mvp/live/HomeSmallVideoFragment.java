@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
-import android.widget.Toast;
+import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.zwj.mvpdemo.R;
@@ -18,7 +19,12 @@ import com.example.zwj.mvpdemo.bean.GankBean;
 import com.example.zwj.mvpdemo.di.component.AppComponent;
 import com.example.zwj.mvpdemo.di.component.DaggerHomeSmallVideoComponent;
 import com.example.zwj.mvpdemo.di.module.HomeSmallVideoModule;
+import com.example.zwj.mvpdemo.service.GankDataService;
 import com.example.zwj.mvpdemo.utils.FCLogger;
+import com.example.zwj.mvpdemo.utils.ToastUtils;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +54,10 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
     private List<GankBean> datas = new ArrayList<>();
     private int pageCount = 20;
     private int pageIndex = 1;
+    private boolean isLoadMore;
+    private StaggeredGridLayoutManager layoutManager;
+    private View notDataView;
+    private View errorView;
 
     public HomeSmallVideoFragment() {
         // Required empty public constructor
@@ -96,11 +106,38 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
     protected void initView(View rootView) {
         swipeLayoutSmallVideo.setOnRefreshListener(this);
         swipeLayoutSmallVideo.setColorSchemeColors(Color.rgb(47, 223, 189));
-        rvSmallVideo.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        homeSmallVideoAdapter = new HomeSmallVideoAdapter(datas, mContext);
+        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        rvSmallVideo.setLayoutManager(layoutManager);
+        rvSmallVideo.setItemAnimator(new DefaultItemAnimator());
+
+        homeSmallVideoAdapter = new HomeSmallVideoAdapter(mContext, datas);
         homeSmallVideoAdapter.setOnLoadMoreListener(this, rvSmallVideo);
-//        homeSmallVideoAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
+        homeSmallVideoAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         rvSmallVideo.setAdapter(homeSmallVideoAdapter);
+
+        rvSmallVideo.setHasFixedSize(true);
+        initErrorAndNoDataView();
+    }
+
+    /**
+     * 初始化加载空布局和错误布局
+     */
+    private void initErrorAndNoDataView() {
+        notDataView = mContext.getLayoutInflater().inflate(R.layout.empty_view, (ViewGroup) rvSmallVideo.getParent(), false);
+        notDataView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshData();
+            }
+        });
+        errorView = mContext.getLayoutInflater().inflate(R.layout.error_view, (ViewGroup) rvSmallVideo.getParent(), false);
+        errorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshData();
+            }
+        });
     }
 
     @Override
@@ -119,10 +156,15 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        super.onFirstUserVisible();
-        FCLogger.debug("onFirstUserVisible");
-        swipeLayoutSmallVideo.setRefreshing(true);
+    protected void lazyFetchData() {
+        super.lazyFetchData();
+        FCLogger.debug("lazyFetchData");
+        swipeLayoutSmallVideo.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeLayoutSmallVideo.setRefreshing(true);
+            }
+        });
         refreshData();
     }
 
@@ -148,6 +190,11 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
 
     }
 
+    @Override
+    public boolean userEventBus() {
+        return true;
+    }
+
     /**
      * 刷新成功
      *
@@ -156,42 +203,65 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
     @Override
     public void onRefreshSuccess(List<GankBean> gankBeanList) {
         FCLogger.debug("获取数据成功：" + gankBeanList.size());
-        datas.clear();
-        datas.addAll(gankBeanList);
-        homeSmallVideoAdapter.setNewData(datas);
-        if (gankBeanList.size() == pageCount) {
-            pageIndex += 1;
-            homeSmallVideoAdapter.setEnableLoadMore(true);
+        isLoadMore = false;
+        if (gankBeanList.size() == 0){
+            homeSmallVideoAdapter.setEmptyView(notDataView);
+            return;
         }
+        GankDataService.startService(mContext, gankBeanList);
     }
 
+    /**
+     * 加载更多成功
+     *
+     * @param gankBeanList
+     */
     @Override
     public void onLoadMoreSuccess(List<GankBean> gankBeanList) {
-        if (swipeLayoutSmallVideo != null) {
-            swipeLayoutSmallVideo.setEnabled(true);
+        isLoadMore = true;
+        GankDataService.startService(mContext, gankBeanList);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void dataEvent(List<GankBean> data) {
+        if (isLoadMore) {
+            if (swipeLayoutSmallVideo != null) {
+                swipeLayoutSmallVideo.setEnabled(true);
+            }
+            if (data.size() == 0) {
+                homeSmallVideoAdapter.loadMoreComplete();
+            } else {
+                pageIndex++;
+                homeSmallVideoAdapter.loadMoreComplete();
+                homeSmallVideoAdapter.addData(datas.size(), data);
+            }
+        } else {
+            datas.clear();
+            datas.addAll(data);
+            homeSmallVideoAdapter.setNewData(datas);
+            if (data.size() == pageCount) {
+                pageIndex += 1;
+                homeSmallVideoAdapter.setEnableLoadMore(true);
+            }
+            swipeLayoutSmallVideo.setRefreshing(false);
+
         }
-        if (gankBeanList.size() == pageCount) {
-            pageIndex += 1;
-            homeSmallVideoAdapter.loadMoreEnd(true);
-        }
-        datas.addAll(gankBeanList);
-        homeSmallVideoAdapter.setNewData(datas);
     }
 
     @Override
     public void onRefreshFailed() {
-        if (swipeLayoutSmallVideo != null){
+        if (swipeLayoutSmallVideo != null) {
             swipeLayoutSmallVideo.setRefreshing(false);
         }
-        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
+        homeSmallVideoAdapter.setEmptyView(errorView);
+        ToastUtils.showShort("网络异常，请重试");
     }
 
     @Override
     public void onLoadMoreFailed() {
-        if (homeSmallVideoAdapter != null){
+        if (homeSmallVideoAdapter != null) {
             homeSmallVideoAdapter.loadMoreFail();
         }
-        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -205,13 +275,15 @@ public class HomeSmallVideoFragment extends BaseFragment<HomeSmallVideoPresenter
      * 下拉刷新数据
      */
     private void refreshData() {
+        homeSmallVideoAdapter.setEmptyView(R.layout.loading_view, (ViewGroup) rvSmallVideo.getParent());
+        isLoadMore = false;
         pageIndex = 1;
-        homeSmallVideoAdapter.setEnableLoadMore(false);
         mPresenter.getMeiZhiData(mContext, false, "福利", pageCount, pageIndex);
     }
 
     @Override
     public void onLoadMoreRequested() {
+        isLoadMore = true;
         mPresenter.getMeiZhiData(mContext, true, "福利", pageCount, pageIndex);
     }
 }

@@ -6,22 +6,29 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.zwj.mvpdemo.R;
 import com.example.zwj.mvpdemo.adapter.HomeFollowAdapter;
 import com.example.zwj.mvpdemo.base.BaseFragment;
+import com.example.zwj.mvpdemo.bean.BannerBean;
 import com.example.zwj.mvpdemo.bean.GankBean;
 import com.example.zwj.mvpdemo.di.component.AppComponent;
 import com.example.zwj.mvpdemo.di.component.DaggerHomeFollowComponent;
 import com.example.zwj.mvpdemo.di.module.HomeFollowModule;
 import com.example.zwj.mvpdemo.utils.FCLogger;
+import com.example.zwj.mvpdemo.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.bingoogolapple.bgabanner.BGABanner;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * 首页关注
@@ -30,7 +37,8 @@ import butterknife.BindView;
  *
  * @author zhouwenjun
  */
-public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implements HomeFollowContact.View ,BaseQuickAdapter.RequestLoadMoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implements HomeFollowContact.View, BaseQuickAdapter.RequestLoadMoreListener,
+        SwipeRefreshLayout.OnRefreshListener, BGABanner.Adapter<ImageView, String>, BGABanner.Delegate<ImageView, String> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,8 +53,11 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
     RecyclerView rvFollow;
     private HomeFollowAdapter homeFollowAdapter;
     private List<GankBean> datas = new ArrayList<>();
-    private int pageCount = 20;
+    private int pageCount = 2;
     private int pageIndex = 1;
+    private BGABanner mBanner;
+    private View notDataView;
+    private View errorView;
 
     public HomeFollowFragment() {
         // Required empty public constructor
@@ -73,6 +84,7 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
 
     @Override
     protected void initData() {
+
     }
 
     @Override
@@ -87,8 +99,44 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
         rvFollow.setLayoutManager(new LinearLayoutManager(mContext));
         homeFollowAdapter = new HomeFollowAdapter(datas, mContext);
         homeFollowAdapter.setOnLoadMoreListener(this, rvFollow);
-//        homeSmallVideoAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
+        homeFollowAdapter.addHeaderView(getHeadView());
+        homeFollowAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         rvFollow.setAdapter(homeFollowAdapter);
+        rvFollow.setHasFixedSize(true);
+        initErrorAndNoDataView();
+    }
+
+    /**
+     * 初始化加载空布局和错误布局
+     */
+    private void initErrorAndNoDataView() {
+        notDataView = mContext.getLayoutInflater().inflate(R.layout.empty_view, (ViewGroup) rvFollow.getParent(), false);
+        notDataView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshData();
+            }
+        });
+        errorView = mContext.getLayoutInflater().inflate(R.layout.error_view, (ViewGroup) rvFollow.getParent(), false);
+        errorView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshData();
+            }
+        });
+    }
+
+    /**
+     * 获取rvHeadView
+     *
+     * @return
+     */
+    private View getHeadView() {
+        View headerView = View.inflate(mContext, R.layout.layout_follow_head_view, null);
+        mBanner = (BGABanner) headerView.findViewById(R.id.banner_home_follow);
+        mBanner.setAdapter(this);
+        mBanner.setDelegate(this);
+        return headerView;
     }
 
     @Override
@@ -107,11 +155,12 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
     }
 
     @Override
-    protected void onFirstUserVisible() {
-        super.onFirstUserVisible();
-        FCLogger.debug("onFirstUserVisible");
+    protected void lazyFetchData() {
+        super.lazyFetchData();
+        FCLogger.debug("lazyFetchData");
         swipeLayoutFollow.setRefreshing(true);
         refreshData();
+        mPresenter.loadBannerData();
     }
 
     @Override
@@ -143,6 +192,10 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
      */
     @Override
     public void onRefreshSuccess(List<GankBean> gankBeanList) {
+        if (gankBeanList == null || gankBeanList.size() == 0) {
+            homeFollowAdapter.setEmptyView(notDataView);
+            return;
+        }
         FCLogger.debug("获取数据成功：" + gankBeanList.size());
         datas.clear();
         datas.addAll(gankBeanList);
@@ -158,10 +211,9 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
         swipeLayoutFollow.setEnabled(true);
         if (gankBeanList.size() == pageCount) {
             pageIndex += 1;
-            homeFollowAdapter.loadMoreEnd(true);
+            homeFollowAdapter.loadMoreComplete();
         }
-        datas.addAll(gankBeanList);
-        homeFollowAdapter.setNewData(datas);
+        homeFollowAdapter.addData(datas.size(), gankBeanList);
     }
 
     @Override
@@ -175,6 +227,7 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
      * 下拉刷新数据
      */
     private void refreshData() {
+        homeFollowAdapter.setEmptyView(R.layout.loading_view, (ViewGroup) rvFollow.getParent());
         pageIndex = 1;
         homeFollowAdapter.setEnableLoadMore(false);
         mPresenter.getMeiZhiData(mContext, false, "福利", pageCount, pageIndex);
@@ -187,17 +240,40 @@ public class HomeFollowFragment extends BaseFragment<HomeFollowPresenter> implem
 
     @Override
     public void onRefreshFailed() {
-        if (swipeLayoutFollow != null){
+        if (swipeLayoutFollow != null) {
             swipeLayoutFollow.setRefreshing(false);
         }
-        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
+        homeFollowAdapter.setEmptyView(errorView);
+        ToastUtils.showShort("网络异常，请重试");
     }
 
     @Override
     public void onLoadMoreFailed() {
-        if (homeFollowAdapter != null){
+        if (homeFollowAdapter != null) {
             homeFollowAdapter.loadMoreFail();
         }
-        Toast.makeText(mContext,"网络异常，请重试",Toast.LENGTH_SHORT).show();
+        ToastUtils.showShort("网络异常，请重试");
+    }
+
+    @Override
+    public void onLoadBannerDataSuccess(BannerBean bannerBean) {
+        mBanner.setData(bannerBean.imgs, bannerBean.tips);
+    }
+
+    @Override
+    public void fillBannerItem(BGABanner banner, ImageView itemView, String model, int position) {
+        Glide.with(this)
+                .load(model)
+                .bitmapTransform(new RoundedCornersTransformation(mContext, 3, 0))
+                .placeholder(R.drawable.holder)
+                .error(R.drawable.holder)
+                .dontAnimate()
+                .centerCrop()
+                .into(itemView);
+    }
+
+    @Override
+    public void onBannerItemClick(BGABanner banner, ImageView itemView, String model, int position) {
+        Toast.makeText(mContext, "点击了第" + (position + 1) + "页", Toast.LENGTH_SHORT).show();
     }
 }

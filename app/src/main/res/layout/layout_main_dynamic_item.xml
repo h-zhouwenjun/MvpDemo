@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@color/colorWhite"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/img_dynamic_head"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <RelativeLayout
+        android:id="@+id/rl_dynamic_personal_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@+id/img_dynamic_head">
+
+        <TextView
+            android:id="@+id/txt_dynamic_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="梦之队玲儿"
+            android:textColor="@color/colorBlack" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_dynamic_author"
+            android:layout_marginTop="4dp"
+            android:text="开普勒452B星球"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="昨天18：55"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+    <com.example.zwj.mvpdemo.widget.ExpandTextView
+        android:id="@+id/expand_txt_dynamic_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/img_dynamic_head"
+        android:layout_toRightOf="@+id/img_dynamic_head" />
+
+    <com.example.zwj.mvpdemo.widget.MultiImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/expand_txt_dynamic_content"
+        android:layout_toRightOf="@+id/img_dynamic_head" />
+
+</RelativeLayout>

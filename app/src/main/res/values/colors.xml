@@ -10,4 +10,18 @@
     <color name="colorCommonBg">#efeff4</color>
     <color name="colorBlack">#000000</color>
 
+    <color name="teal">#00796B</color>
+    <color name="brown">#8D6E63</color>
+    <color name="blue">#2196F3</color>
+    <color name="red">#FF0000</color>
+    <color name="grey">#607D8B</color>
+    <color name="orange">#F57C00</color>
+    <color name="bg">#F0F0F0</color>
+    <color name="txt_color">#48495F</color>
+    <color name="color_8290AF">#8290AF</color>
+    <color name="color_232323">#232323</color>
+    <color name="transparent">#00000000</color>
+    <color name="chat_text_color">#373334</color>
+    <color name="default_clickable_color">#cccccc</color>
+
 </resources>

@@ -87,11 +87,6 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements HomeCon
     }
 
     @Override
-    protected void onFirstUserVisible() {
-
-    }
-
-    @Override
     public void showLoading() {
 
     }

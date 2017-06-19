@@ -45,7 +45,11 @@ public class HomeSmallVideoPresenter extends BasePresenter<HomeSmallVideoContact
 
             @Override
             public void onError(int code, String errorMsg) {
-                FCLogger.debug(errorMsg);
+                if (isLoadMore){
+                    mRootView.onLoadMoreFailed();
+                } else {
+                    mRootView.onRefreshFailed();
+                }
             }
         });
         GankApi.getInstance(context).getGankData(mHttpObserver, type, count, page);

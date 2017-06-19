@@ -1,6 +1,7 @@
 package com.example.zwj.mvpdemo.mvp.live;
 
 import com.example.zwj.mvpdemo.base.BaseView;
+import com.example.zwj.mvpdemo.bean.BannerBean;
 import com.example.zwj.mvpdemo.bean.GankBean;
 
 import java.util.List;
@@ -22,5 +23,7 @@ public interface HomeFollowContact {
         void onRefreshFailed();
 
         void onLoadMoreFailed();
+
+        void onLoadBannerDataSuccess(BannerBean bannerBean);
     }
 }
