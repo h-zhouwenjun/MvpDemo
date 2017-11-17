@@ -12,7 +12,7 @@ public class PhotoViewActivity extends BaseActivity {
 
     @BindView(R.id.photo_view)
     PhotoView photoView;
-    private String url;
+    private String url;//小蒋是个sb
 
     @Override
     protected void ComponentInject(AppComponent appComponent) {
